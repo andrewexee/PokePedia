@@ -145,4 +145,4 @@ Hecho por **andrewexee** — si quieres ver más proyectos visita mi perfil de G
 
 ---
 
-<p align="center">⭐ PokePedia v1.0 — Hecho con React y mucho café ⭐</p>
+<p align="center">⭐ PokePedia v1.0 — Andrés Iglesias Camacho ⭐</p>
