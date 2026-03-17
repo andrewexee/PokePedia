@@ -170,8 +170,8 @@ export default function Pokedex() {
   // Rango de páginas visibles en el paginador (máx 5 botones)
   const getPageRange = () => {
     const delta = 2
-    const start = Math.max(1, currentPage - delta)
-    const end   = Math.min(totalPages, currentPage + delta)
+    const start = Math.max(1, safePage - delta)
+    const end   = Math.min(finalTotal, safePage + delta)
     return Array.from({ length: end - start + 1 }, (_, i) => start + i)
   }
 
@@ -260,27 +260,21 @@ export default function Pokedex() {
   // Lista de pokémon favoritos completa
   const favoritosList = allDetails.filter(p => favoritos.includes(p.id))
 
-  // Lista final según modo activo
-  const getFinalList = () => {
-    if (viendoFavs)   return favoritosList
-    if (isSearching)  return searchResults
-    return paginatedData
-  }
+  // Lista fuente según modo activo
+  const listaFuente = viendoFavs ? favoritosList : isSearching ? searchResults : allDetails
 
-  const getFinalTotal = () => {
-    if (viendoFavs)  return Math.ceil(favoritosList.length / PAGE_SIZE)
-    if (isSearching) return Math.ceil(searchResults.length / PAGE_SIZE)
-    return totalPages
-  }
+  // Total de páginas — mínimo 1 para evitar divisiones por cero
+  const finalTotal = viendoFavs || isSearching
+    ? Math.max(1, Math.ceil(listaFuente.length / PAGE_SIZE))
+    : totalPages
 
-  // Paginación aplicada a la lista final
-  const finalList  = viendoFavs
-    ? favoritosList.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
-    : isSearching
-      ? searchResults.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
-      : paginatedData
+  // Página actual siempre dentro del rango válido
+  const safePage = Math.min(currentPage, finalTotal)
 
-  const finalTotal = getFinalTotal()
+  // Lista paginada final
+  const finalList = viendoFavs || isSearching
+    ? listaFuente.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
+    : paginatedData
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -369,7 +363,7 @@ export default function Pokedex() {
                 {/* Anterior */}
                 <button
                   onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo(0,0) }}
-                  disabled={currentPage === 1}
+                  disabled={safePage === 1}
                   className="px-3 py-1.5 rounded-full text-sm font-bold bg-gray-100 hover:bg-gray-200 disabled:opacity-30 transition-colors"
                 >
                   ‹
@@ -394,7 +388,7 @@ export default function Pokedex() {
                     key={page}
                     onClick={() => { setCurrentPage(page); window.scrollTo(0,0) }}
                     className={`px-3 py-1.5 rounded-full text-sm font-bold transition-colors
-                      ${currentPage === page
+                      ${safePage === page
                         ? 'bg-red-500 text-white shadow'
                         : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
                   >
@@ -418,7 +412,7 @@ export default function Pokedex() {
                 {/* Siguiente */}
                 <button
                   onClick={() => { setCurrentPage(p => Math.min(finalTotal, p + 1)); window.scrollTo(0,0) }}
-                  disabled={currentPage === finalTotal}
+                  disabled={safePage === finalTotal}
                   className="px-3 py-1.5 rounded-full text-sm font-bold bg-gray-100 hover:bg-gray-200 disabled:opacity-30 transition-colors"
                 >
                   ›
@@ -426,7 +420,7 @@ export default function Pokedex() {
 
                 {/* Indicador */}
                 <span className="text-xs text-gray-400 ml-2">
-                  Página {currentPage} de {finalTotal}
+                  Página {safePage} de {finalTotal}
                 </span>
 
               </div>
