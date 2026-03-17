@@ -1,6 +1,6 @@
 # 🎮 PokePedia
 
-> **Versión 1.2**
+> **Versión 1.4**
 
 PokePedia es una Pokédex interactiva inspirada en la app WikiDex, donde puedes explorar los más de 1000 Pokémon existentes, filtrarlos por tipo, generación o número, guardar tus favoritos y consultar la tabla de tipos y los mapas de cada región. Todo desde una interfaz moderna, rápida y siempre disponible.
 
@@ -20,10 +20,11 @@ PokePedia es una Pokédex interactiva inspirada en la app WikiDex, donde puedes 
 - 📖 **Pokédex completa** con los 1025 Pokémon de todas las generaciones
 - 🔍 **Búsqueda** por nombre con filtros combinados por número, tipo y generación
 - ⭐ **Sistema de favoritos** por usuario, almacenados en la nube
-- 🃏 **Modal de detalle** con estadísticas base y línea evolutiva completa
-- 🗺️ **Mapas** de las regiones Kanto, Johto y Sinnoh
+- 🃏 **Modal de detalle Pokémon** con estadísticas base y línea evolutiva completa
+- 🗺️ **Mapas de las 9 regiones** con modal de detalle, descripción y localizaciones desde la PokéAPI
 - ⚔️ **Tabla de tipos** con efectividades
 - 👤 **Perfil editable** — nombre, correo y contraseña
+- ℹ️ **Pantalla Info** con descripción de la app, tecnologías y enlace al desarrollador
 - 📱 Interfaz SPA sin recargas de página
 
 ---
@@ -98,12 +99,18 @@ Coloca los siguientes archivos en `public/resources/`:
 ```
 public/
 └── resources/
-    ├── pokepedia-logo.png
-    ├── pokeball.png
-    ├── tipos-tabla.jpg
-    ├── mapa-kanto.png
-    ├── mapa-johto.png
-    └── mapa-sinnoh.png
+    ├── pokepedia-logo.png    ← Logo de la app
+    ├── pokeball.png          ← Icono pokeball
+    ├── tipos-tabla.jpg       ← Tabla de tipos
+    ├── mapa-kanto.png        ← Región Kanto (1ª GEN)
+    ├── mapa-johto.png        ← Región Johto (2ª GEN)
+    ├── mapa-hoenn.png        ← Región Hoenn (3ª GEN)
+    ├── mapa-sinnoh.png       ← Región Sinnoh (4ª GEN)
+    ├── mapa-teselia.png      ← Región Teselia (5ª GEN)
+    ├── mapa-kalos.png        ← Región Kalos (6ª GEN)
+    ├── mapa-alola.png        ← Región Alola (7ª GEN)
+    ├── mapa-galar.png        ← Región Galar (8ª GEN)
+    └── mapa-paldea.png       ← Región Paldea (9ª GEN)
 ```
 
 ### 6. Arranca el proyecto
@@ -121,7 +128,8 @@ src/
 ├── components/
 │   ├── Navbar.jsx
 │   ├── PokemonCard.jsx
-│   └── PokemonModal.jsx
+│   ├── PokemonModal.jsx
+│   └── MapaModal.jsx
 ├── pages/
 │   ├── SplashScreen.jsx
 │   ├── Login.jsx
@@ -145,4 +153,4 @@ Hecho por **andrewexee** — si quieres ver más proyectos visita mi perfil de G
 
 ---
 
-<p align="center">⭐ PokePedia v1.2 — Andrés Iglesias Camacho ⭐</p>
+<p align="center">⭐ PokePedia v1.4 — Andrés Iglesias Camacho ⭐</p>
