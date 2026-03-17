@@ -58,7 +58,7 @@ export default function Ajustes() {
               className="h-12 object-contain"
             />
             <span className="bg-red-500 text-white text-xs font-bold px-4 py-1 rounded-full tracking-widest shadow">
-              VERSIÓN 1.4
+              VERSIÓN 1.6
             </span>
             <p className="text-gray-500 text-sm text-center leading-relaxed mt-1">
               PokePedia es una Pokédex interactiva inspirada en la app WikiDex, donde puedes
