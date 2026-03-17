@@ -69,7 +69,7 @@ export default function Register() {
         <img
           src="/resources/pokeball.png"
           alt="Pokeball"
-          className="w-16 h-16 object-contain -mt-14 drop-shadow-md"
+          className="w-16 h-16 object-contain -mt-14 drop-shadow-md animate-spin-slow"
         />
 
         {/* Título */}
