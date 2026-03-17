@@ -1,6 +1,6 @@
 # 🎮 PokePedia
 
-> **Versión 1.6**
+> **Versión 1.8**
 
 PokePedia es una Pokédex interactiva inspirada en la app WikiDex, donde puedes explorar los más de 1000 Pokémon existentes, filtrarlos por tipo, generación o número, guardar tus favoritos y consultar la tabla de tipos y los mapas de cada región. Todo desde una interfaz moderna, rápida y siempre disponible.
 
@@ -154,4 +154,4 @@ Hecho por **andrewexee** — si quieres ver más proyectos visita mi perfil de G
 
 ---
 
-<p align="center">⭐ PokePedia v1.6 — Andrés Iglesias Camacho ⭐</p>
+<p align="center">⭐ PokePedia v1.8 — Andrés Iglesias Camacho ⭐</p>
