@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import Navbar        from '../components/Navbar'
 import PokemonCard   from '../components/PokemonCard'
 import PokemonModal  from '../components/PokemonModal'
-import { Loader2 }  from 'lucide-react'
-import supabase      from '../supabaseClient'
+import { Loader2 }   from 'lucide-react'
+import useFavoritosStore from '../store/FavStore'
 
 const PAGE_SIZE = 15  // Pokémon por página (5 columnas x 3 filas)
 
@@ -34,11 +34,19 @@ export default function Pokedex() {
   const [isSearching,   setIsSearching]   = useState(false)
   const [activeFilter,  setActiveFilter]  = useState(null)
   const [errorMsg,      setErrorMsg]      = useState('')
-  const [favoritos,     setFavoritos]     = useState([])      // ids de favoritos del usuario
-  const [viendoFavs,    setViendoFavs]    = useState(false)  // modo vista favoritos
-  const [modalPokemon,  setModalPokemon]  = useState(null)   // pokemon seleccionado para modal
+  const [modalPokemon, setModalPokemon] = useState(null)
 
   const usuario = JSON.parse(sessionStorage.getItem('usuario') || '{}')
+
+  // Zustand store
+  const {
+    favoritos,
+    viendoFavs,
+    cargarFavoritos,
+    toggleFavorito,
+    toggleViendoFavs,
+    setViendoFavs,
+  } = useFavoritosStore()
 
   // Rangos de ID por generación
   const GEN_RANGES = {
@@ -62,50 +70,25 @@ export default function Pokedex() {
     'HADA':'fairy','NORMAL':'normal',
   }
 
-  // Cargar favoritos del usuario desde Supabase
+  // Cargar favoritos del usuario desde Supabase via store
   useEffect(() => {
-    if (!usuario?.id) return
-    const fetchFavs = async () => {
-      const { data } = await supabase
-        .from('favoritos')
-        .select('pokemon_id')
-        .eq('usuario_id', usuario.id)
-      if (data) setFavoritos(data.map(f => f.pokemon_id))
-    }
-    fetchFavs()
+    if (usuario?.id) cargarFavoritos(usuario.id)
   }, [usuario?.id])
 
-  // Añadir o quitar favorito
-  const handleToggleFavorito = useCallback(async (pokemon) => {
-    if (!usuario?.id) return
-    const esFav = favoritos.includes(pokemon.id)
+  // Añadir o quitar favorito via store
+  const handleToggleFavorito = useCallback((pokemon) => {
+    if (usuario?.id) toggleFavorito(pokemon, usuario.id)
+  }, [usuario?.id, toggleFavorito])
 
-    if (esFav) {
-      // Quitar
-      await supabase
-        .from('favoritos')
-        .delete()
-        .eq('usuario_id', usuario.id)
-        .eq('pokemon_id', pokemon.id)
-      setFavoritos(prev => prev.filter(id => id !== pokemon.id))
-    } else {
-      // Añadir
-      await supabase
-        .from('favoritos')
-        .insert([{ usuario_id: usuario.id, pokemon_id: pokemon.id, pokemon_name: pokemon.name }])
-      setFavoritos(prev => [...prev, pokemon.id])
-    }
-  }, [favoritos, usuario?.id])
-
-  // Alternar vista de favoritos desde la estrella del Navbar
+  // Alternar vista de favoritos via store
   const handleToggleVistaFavs = useCallback(() => {
-    setViendoFavs(prev => !prev)
+    toggleViendoFavs()
     setIsSearching(false)
     setSearchResults([])
     setSearchQuery('')
     setActiveFilter(null)
     setCurrentPage(1)
-  }, [])
+  }, [toggleViendoFavs])
 
   // 1. Cargar lista completa de nombres una sola vez
   useEffect(() => {
@@ -189,6 +172,7 @@ export default function Pokedex() {
     }
 
     setIsSearching(true)
+    setViendoFavs(false)
     setCurrentPage(1)
 
     const typeEn = TYPE_MAP_ES[q] || q
@@ -202,12 +186,13 @@ export default function Pokedex() {
     setSearchResults(allDetails.filter(p =>
       p.name.includes(q) || String(p.id) === q
     ))
-  }, [allDetails])
+  }, [allDetails, setViendoFavs])
 
   // 5. Filtro avanzado combinado desde el panel
   const handleFilter = useCallback((filtro) => {
     setSearchQuery('')
     setCurrentPage(1)
+    setViendoFavs(false)
 
     if (!filtro) {
       setActiveFilter(null)
@@ -247,7 +232,7 @@ export default function Pokedex() {
     }
 
     setSearchResults(results)
-  }, [allDetails])
+  }, [allDetails, setViendoFavs])
 
   const handleClearSearch = () => {
     setSearchQuery('')

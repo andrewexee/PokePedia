@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Search, Star, User, X, SlidersHorizontal, ChevronDown } from 'lucide-react'
+import useFavoritosStore from '../store/FavStore'
 
 const TIPOS = [
   'FUEGO','AGUA','PLANTA','ELÉCTRICO','HIELO','LUCHA','VENENO',
@@ -98,7 +99,10 @@ export default function Navbar({ onSearch, onClearSearch, onFilter, onToggleFavs
     setFilterOpen(false)
   }
 
+  const { resetFavoritos } = useFavoritosStore()
+
   const handleLogout = () => {
+    resetFavoritos()
     sessionStorage.removeItem('usuario')
     navigate('/')
   }
