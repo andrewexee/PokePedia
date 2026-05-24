@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import Navbar        from '../components/Navbar'
 import PokemonCard   from '../components/PokemonCard'
 import PokemonModal  from '../components/PokemonModal'
-import { Loader2 }   from 'lucide-react'
-import useFavoritosStore from '../store/FavStore'
+import { Loader2, FileDown } from 'lucide-react'
+import useFavoritosStore    from '../store/FavStore'
+import { generarInforme }   from '../utils/generarInforme'
 
 const PAGE_SIZE = 15  // Pokémon por página (5 columnas x 3 filas)
 
@@ -34,7 +35,8 @@ export default function Pokedex() {
   const [isSearching,   setIsSearching]   = useState(false)
   const [activeFilter,  setActiveFilter]  = useState(null)
   const [errorMsg,      setErrorMsg]      = useState('')
-  const [modalPokemon, setModalPokemon] = useState(null)
+  const [modalPokemon,   setModalPokemon]   = useState(null)
+  const [generandoPdf,   setGenerandoPdf]   = useState(false)
 
   const usuario = JSON.parse(sessionStorage.getItem('usuario') || '{}')
 
@@ -300,10 +302,27 @@ export default function Pokedex() {
           <>
             {/* Cabecera modo favoritos */}
             {viendoFavs && (
-              <p className="text-xs text-gray-400 mb-4 self-start flex items-center gap-1">
-                <span className="text-yellow-400">★</span>
-                <span>{favoritosList.length} Pokémon favorito{favoritosList.length !== 1 ? 's' : ''}</span>
-              </p>
+              <div className="flex items-center justify-between w-full max-w-5xl mb-4">
+                <p className="text-xs text-gray-400 flex items-center gap-1">
+                  <span className="text-yellow-400">★</span>
+                  <span>{favoritosList.length} Pokémon favorito{favoritosList.length !== 1 ? 's' : ''}</span>
+                </p>
+                <button
+                  onClick={async () => {
+                    setGenerandoPdf(true)
+                    await generarInforme(usuario, favoritosList)
+                    setGenerandoPdf(false)
+                  }}
+                  disabled={generandoPdf || favoritosList.length === 0}
+                  className="flex items-center gap-2 bg-red-500 hover:bg-red-600 active:scale-95
+                    transition-all text-white font-bold py-1.5 px-4 rounded-full shadow text-xs
+                    tracking-wide disabled:opacity-50"
+                >
+                  {generandoPdf
+                    ? <><Loader2 size={13} className="animate-spin" /> Generando...</>
+                    : <><FileDown size={13} /> Exportar PDF</>}
+                </button>
+              </div>
             )}
 
             {/* Cabecera modo búsqueda/filtro */}
